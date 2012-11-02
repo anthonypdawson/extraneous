@@ -1,4 +1,0 @@
-Dir.glob("*Outer Limits_WRLHDT2_2012_06_09_07_48_14.wtv").each do |i|
-  system("~/src/ffmpeg/ffmpeg -y -i '#{i}' -b 2M -bt 4M -vcodec x264 -pass 1 -flags +loop -me_method dia -g 250 -qcomp 0.6 -qmin 10 -qmax 51 -qdiff 4 -bf 16 -b_strategy 1 -i_qfactor 0.71 -cmp +chroma -subq 1 -me_range 16 -coder 1 -sc_threshold 40 -flags2 -bpyramid-wpred-mixed_refs-dct8x8+fastpskip -keyint_min 25 -refs 1 -trellis 0 -directpred 1 -partitions -parti8x8-parti4x4-partp8x8-partp4x4-partb8x8 -an '#{i}.mp4'")
-  system("~/src/ffmpeg/ffmpeg -y -i '#{i}' -b 2M -bt 4M -vcodec libx264 -pass 2  -flags +loop -me_method umh -g 250 -qcomp 0.6 -qmin 10 -qmax 51 -qdiff 4 -bf 16 -b_strategy 1 -i_qfactor 0.71 -cmp +chroma -subq 8 -me_range 16 -coder 1 -sc_threshold 40 -flags2 +bpyramid+wpred+mixed_refs+dct8x8+fastpskip -keyint_min 25 -refs 4 -trellis 1 -directpred 3 -partitions +parti8x8+parti4x4+partp8x8+partb8x8 -acodec libmp3lame -ac 2 -ar 48000 -ab 192k '#{i}.mp4'")
-end
