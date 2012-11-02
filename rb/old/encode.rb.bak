@@ -1,0 +1,5 @@
+Dir.glob("Cai*.wtv").each do |i|
+  #system("~/src/ffmpeg/ffmpeg -y -i '#{i}' -b 2M -bt 4M -vcodec libx264 -acodec libmp3lame -ac 2 -ar 48000 -ab 192k -an 'encoded/#{i}.mp4'")
+  system("/home/ayd/src/ffmpeg/ffmpeg -threads 1 -flags2 +fast -flags +loop -g 30 -keyint_min 1 -bf 0 -b_strategy 0 -flags2 -wpred-dct8x8 -cmp +chroma -deblockalpha 0 -deblockbeta 0 -refs 1 -coder 0 -me_range 16 -subq 5 -partitions +parti4x4+parti8x8+partp8x8 -trellis 0 -sc_threshold 40 -i_qfactor 0.71 -qcomp 0.6 -i '#{i}' -vcodec libx264 -bufsize 1024k -b 1M -bt 2M -qmax 48 -qmin 2 -acodec libmp3lame -ab 160k -ar 48000 -ac 2 -an 'encode/#{i}.mp4'")
+gets f
+end
