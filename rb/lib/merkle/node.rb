@@ -5,9 +5,10 @@ class Node
   attr_reader :hash, :children
 
   def self.create(file, offset, size)
-    puts "Call to Node.create"
+    puts "Call to Node.create #{offset}:#{size} of #{File.size(file)}"
     n = Node.new
     n.generate_hash(IO.read(file, size, offset))
+    puts n.hash
     n
   end
 
@@ -22,13 +23,30 @@ class Node
   end
 
   def initialize(children = [])   
-    puts "Received #{children.length} children"
+    puts "Received #{children.length} children" if children != []
     @children = children   
   end
 
 
   def generate_hash(data)
-    @hash = Digest::MD5.hexdigest(data)
+    begin
+      @hash = Digest::MD5.hexdigest(data)
+    rescue Exception => e
+      if data.nil?
+        puts "Got nil data for this chunk"
+      else
+        puts "Exception occurred during chunk hashing"
+        puts "Data: #{data}"
+        puts e.inspect
+        puts e.backtrace
+      end
+    ensure
+      @hash = Digest::MD5.hexdigest("") if @hash.nil? and data.nil?
+    end    
+  end
+
+  def compare(node)
+    @hash == node.hash
   end
 
 end
