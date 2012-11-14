@@ -7,13 +7,17 @@ class Hashtree
   def initialize(file, chunk_size=1024)
     @file = file
     @chunk_size = chunk_size
+    @file_size = File.size(file)
+    puts "Using file #{@file} with a chunk size of #{@chunk_size}"
   end
 
   def generate_tree
     offset = 0
     nodes = []
-    puts "Total size of file: #{File.size(@file)}"
+    puts "Total size of file: #{@file_size}"
+    chunk_size = @chunk_size
     begin
+      chunk_size = @file_size - offset if (offset + @chunk_size) > @file_size
       nodes << Node.create(@file, offset, @chunk_size)
       offset += @chunk_size + 1
     end while offset < File.size(@file)
