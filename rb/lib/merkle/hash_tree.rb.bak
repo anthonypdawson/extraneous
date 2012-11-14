@@ -1,0 +1,39 @@
+require 'node.rb'
+
+class Hashtree
+
+  attr_reader :node, :file, :chunk_size
+
+  def initialize(file, chunk_size=1024)
+    @file = file
+    @chunk_size = chunk_size
+  end
+
+  def generate_tree
+    offset = 0
+    nodes = []
+    begin
+      nodes << Node.create(@file, offset, @chunk_size)
+      offset += @chunk_size + 1
+    end while offset < File.size(@file)
+    begin
+      nodes = build_nodes(nodes)
+    end while nodes.length > 1
+  end
+
+  def build_nodes(nodes)
+    parents = []
+    nodeSet = []
+    nodes.each do |n|
+      nodeSet << n
+      if nodeSet.length == 2
+        parents << Node.create_parent(nodeSet[0], nodeSet[1])
+        nodeSet = []
+      end
+    end
+
+    parents << nodeSet[0] if nodeSet.length == 1
+    parents
+  end
+
+end
