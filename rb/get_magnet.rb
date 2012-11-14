@@ -4,7 +4,7 @@ magnet = ARGV[0]
 torrent_dir = "~/Public/Torrents"
 category = nil
 ARGV.each do |arg|
-  puts arg
+#  puts arg
   category = arg.split("=").last if arg.start_with?("c=")
   torrent_dir = arg.split("=").last if arg.start_with?("dir=")
 end
