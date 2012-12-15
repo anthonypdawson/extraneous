@@ -4,36 +4,40 @@ class Node
   
   attr_reader :hash, :children
 
-  def self.create(file, offset, size)
-    puts "Call to Node.create #{offset}:#{size} of #{File.size(file)}"
-    n = Node.new
+  def self.create(file, offset, size, verbose=false)
+    puts "Call to Node.create #{offset}:#{size} of #{File.size(file)}" if verbose
+    n = Node.new [], verbose
     n.generate_hash(IO.read(file, size, offset))
-    puts n.hash
+    n.log n.hash
     n
   end
 
-  def self.create_parent(nodes)
-    puts "Call to node.create_parent"
-    puts "Using #{nodes.map{|n| n.hash}.join(' ')}"
-    node = Node.new(nodes)
+  def self.create_parent(nodes, verbose=false)
+    puts "Call to node.create_parent" if verbose
+    puts "Using #{nodes.map{|n| n.hash}.join(' ')}" if verbose
+    node = Node.new(nodes, verbose)
     child_hashes = nodes.map{|n| n.hash }
-    puts "Parent hash = #{child_hashes.join('-')}"
+    node.log "Parent hash = #{child_hashes.join('-')}"
     node.generate_hash(child_hashes.join(""))    
     node
   end
 
-  def initialize(children = [])   
-    puts "Received #{children.length} children" if children != []
+  def initialize(children = [], verbose=false)
+    @verbose = verbose   
+    log "Received #{children.length} children" if children != []
     @children = children   
   end
 
+  def log (message)
+      puts message if @verbose
+  end
 
   def generate_hash(data)
     begin
       @hash = Digest::MD5.hexdigest(data)
     rescue Exception => e
       if data.nil?
-        puts "Got nil data for this chunk"
+        log "Got nil data for this chunk"
       else
         puts "Exception occurred during chunk hashing"
         puts "Data: #{data}"
