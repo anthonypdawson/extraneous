@@ -10,6 +10,7 @@ class Node
     n = Node.new [], verbose
     n.generate_hash(IO.read(file, size, offset))
     n.log n.hash
+    @chunk = {:file => file, :offset => offset, :size => size}
     n
   end
 
@@ -39,6 +40,8 @@ class Node
     rescue Exception => e
       if data.nil?
         log "Got nil data for this chunk"
+      if data.nil?
+        puts "Got nil data for this chunk"
       else
         puts "Exception occurred during chunk hashing"
         puts "Data: #{data}"
@@ -66,6 +69,17 @@ class Node
     return bad_nodes
   end
 
+  def nodes
+    @children
+  end
+
+  def chunks
+    if @chunk.nil?
+      return @children.select {|c| c.chunks }
+    end
+
+    @chunk
+  end
 
 end
 
