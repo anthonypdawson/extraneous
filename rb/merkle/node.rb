@@ -9,6 +9,7 @@ class Node
     n = Node.new
     n.generate_hash(IO.read(file, size, offset))
     puts n.hash
+    @chunk = {:file => file, :offset => offset, :size => size}
     n
   end
 
@@ -32,7 +33,7 @@ class Node
     begin
       @hash = Digest::MD5.hexdigest(data)
     rescue Exception => e
-      if data.nil?
+|      if data.nil?
         puts "Got nil data for this chunk"
       else
         puts "Exception occurred during chunk hashing"
@@ -47,6 +48,18 @@ class Node
 
   def compare(node)
     @hash == node.hash
+  end
+
+  def nodes
+    @children
+  end
+
+  def chunks
+    if @chunk.nil?
+      return @children.select {|c| c.chunks }
+    end
+
+    @chunk
   end
 
 end
