@@ -1,3 +1,4 @@
+#!/bin/env ruby
 require 'digest/md5'
 
 class Node
@@ -52,6 +53,19 @@ class Node
   def compare(node)
     @hash == node.hash
   end
+
+  def get_bad_nodes(node, bad_nodes)
+    if !compare(node)
+        bad_nodes << @children 
+    else
+    
+        @children.each_index do |i|
+          bad_nodes = @children[i].get_bad_nodes(node.children[i], bad_nodes)
+         end			     
+    end
+    return bad_nodes
+  end
+
 
 end
 
