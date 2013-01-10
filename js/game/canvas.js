@@ -20,6 +20,9 @@ Canvas.prototype.drawPoint = function(x, y, w, h, color){
 	return false;
     }
     console.log(x + " " + y+ " " + w+ " " + h+ " " + color);
+    var point = new Entity();
+    point.move(x, y);
+    
     var ctx = this.ctx;
     ctx.fillStyle = this.fillStyle
 
@@ -27,10 +30,8 @@ Canvas.prototype.drawPoint = function(x, y, w, h, color){
 	ctx.fillStyle = color;
     }
 
-    log("drawing " + x + "x" + y);
-
     ctx.fillStyle = color;
-    ctx.fillRect(x, y, w, h);
+    draw(point);
 
     return {x: x, y: y, width: w, height: h, color: color};
 }
@@ -49,12 +50,26 @@ Canvas.prototype.drawLevel = function(level){
 	}
     });
 } 
+
+Canvas.prototype.drawEntity = function(entity){
+    this.draw({x: entity.position.x, 
+	       y: entity.position.y, 
+	       height: entity.height, 
+	       width: entity.width,
+	       shape: entity.shape});	       
+}
+
 Canvas.prototype.draw = function(options){
     var x = defaults("x", options);
     var y = defaults("y", options);
     var width = defaults("width", options);
     var height = defaults("height", options);
     var color = defaults("color", options);
+
+    var ctx = this.ctx;
+    // Placeholder for fillStyle
+    ctx.fillStyle = 'red';
+    options.shape.drawFunction(ctx);
 }    
 
 function defaults(prop, val){
