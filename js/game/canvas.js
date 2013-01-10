@@ -31,7 +31,7 @@ Canvas.prototype.drawPoint = function(x, y, w, h, color){
     }
 
     ctx.fillStyle = color;
-    draw(point);
+    this.drawEntity(point);
 
     return {x: x, y: y, width: w, height: h, color: color};
 }
