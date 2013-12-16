@@ -1,0 +1,1 @@
+select dt.c, f.size, f.path, f.hash from files f inner join (select size, path, hash, count(*) as c from files group by size having count(*) > 1) dt on  f.hash = dt.hash;
