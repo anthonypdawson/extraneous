@@ -22,7 +22,7 @@ Builder.prototype.setLine = function(x, y) {
 }
 
 Builder.prototype.redrawLevel = function() {
-    console.log(this.map);
+    log(this.map);
     this.canvas.drawLevel(this.map);
 }
 
@@ -31,7 +31,7 @@ Builder.prototype.addPoint = function(point){
     if (!defined(map[point.x])){
 	map[point.x] = [];
     }
-    map[point.x][point.y] = {x: point.x, y: point.y};
+    map[point.x][point.y] = point;
 }
 
 

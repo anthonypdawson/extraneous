@@ -19,33 +19,44 @@ Canvas.prototype.drawPoint = function(x, y, w, h, color){
     if (!defined(x) && !defined(y)){
 	return false;
     }
-    console.log(x + " " + y+ " " + w+ " " + h+ " " + color);
-    var point = new Entity();
-    point.move(x, y);
-    
-    var ctx = this.ctx;
-    ctx.fillStyle = this.fillStyle
-
-    if (color != null){
-	ctx.fillStyle = color;
+    if (!defined(color)) {
+	color = this.getColor();
     }
-
-    ctx.fillStyle = color;
+    log(x + " " + y+ " " + w+ " " + h+ " " + color);
+    var point = new Point();
+    point.setArea(15, 15);
+    point.move(x, y);
+    point.color = color;
+    var ctx = this.ctx;
+    
+    if (point.color != 'undefined'){
+	ctx.fillStyle = point.color;
+    } else {
+	ctx.fillStyle = this.fillStyle;
+    }
     this.drawEntity(point);
 
-    return {x: x, y: y, width: w, height: h, color: color};
+    return point;
+}
+
+Canvas.prototype.getColor = function() {
+    if (defined(jQuery)) {
+	el = $(".colorPicker-picker");
+	if (defined(el)) { return el.css("background-color"); }
+    }
 }
 
 Canvas.prototype.drawLevel = function(level){
     canvas = this;
     canvas.ctx.clearRect(0,0,800, 600);
-    console.log(level);
+    color = this.getColor();
     $.each(level, function(k, v) {
 	if (!defined(v) || v == null){
 	    log("undefined");
 	} else {
 	    $.each(v, function(){
- 		canvas.drawPoint(this.x, this.y, 5, 5, "#FF0000");
+		if (defined(this.color)) { color = this.color }
+ 		canvas.drawPoint(this.x, this.y, 5, 5, color);
 	    });
 	}
     });
@@ -56,7 +67,7 @@ Canvas.prototype.drawEntity = function(entity){
 	       y: entity.position.y, 
 	       height: entity.height, 
 	       width: entity.width,
-	       shape: entity.shape});	       
+	       shape: entity});	       
 }
 
 Canvas.prototype.draw = function(options){
@@ -64,19 +75,31 @@ Canvas.prototype.draw = function(options){
     var y = defaults("y", options);
     var width = defaults("width", options);
     var height = defaults("height", options);
-    var color = defaults("color", options);
+    var color = defaults("color", options);    
+    if (defined(options.shape) && defined(options.shape.color)) {
+	color = options.shape.color;     
+    }
 
     var ctx = this.ctx;
     // Placeholder for fillStyle
-    ctx.fillStyle = 'red';
-    options.shape.drawFunction(ctx);
+    //ctx.fillStyle = 'red';
+    if (typeof options.shape != 'undefined'){ 
+      ctx.fillStyle = color;
+      options.shape.drawFunction(ctx);
+      ctx.stroke();
+    }
 }    
 
 function defaults(prop, val){
-    if (defined(val[prop]) && val[prop]!=null){
-	return val[prop];
+    if (typeof val != 'undefined'){	
+	if (defined(val[prop]) && val[prop]!=null){
+	    return val[prop];
+	}
+    } else {
+	switch(prop){
+	    case "color": return "#FFFFFF";
+        }
     }
-
     switch(prop){
     case 'x': 
     case 'y': return returnDefault(val[prop], 0);

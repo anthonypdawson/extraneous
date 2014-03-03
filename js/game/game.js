@@ -28,7 +28,7 @@ Game.prototype.draw = function() {
 		game.drawLine(this.start, this.end);
 	    });
 	    $(game.entities).each(function() {
-		console.log(this);
+		log(this);
 		game.drawDot(this.X, this.Y, this.width,  this.height);
 	    });
 	};

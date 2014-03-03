@@ -11,8 +11,9 @@ $(document).ready(function () {
 	    if (mouseDown){
 		var pointValue = builder.canvas.drawPoint(e.clientX, e.clientY, 5, 5);
 		builder.addPoint(pointValue);
-		console.log(builder.map);
-		console.log(pointValue);
+		builder.redrawLevel();
+		//log(builder.map);
+		//log(pointValue);
 	    }
 	});
 
@@ -40,7 +41,7 @@ $(document).ready(function () {
     }
 
     function load() {	
-	if (defined(Builder)){
+	if (typeof Builder == 'undefined' || !(Builder in window)){
 	    log("defined");
 	    setup(); 
 
@@ -52,5 +53,5 @@ $(document).ready(function () {
     }
 
     load();
-
+    $("#draw_color").colorPicker();
 });

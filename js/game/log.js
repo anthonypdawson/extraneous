@@ -1,13 +1,14 @@
 loglevels = {log: 5, debug: 4, error: 3};
 loglevel = 4;
+log_enabled = true;
 function log(message){
-    if(loglevel >= loglevels.log){
+    if(log_enabled && loglevel >= loglevels.log){
 	console.log("|Log| " + message);
     }
 }
 
 function debug(message){
-    if(loglevel >= loglevels.debug){
+    if(log_enabled && loglevel >= loglevels.debug){
 	console.log("|Debug| " + message);
     }
 }
